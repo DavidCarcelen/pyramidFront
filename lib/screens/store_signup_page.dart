@@ -14,7 +14,7 @@ class _StoreSignupPageState extends State<StoreSignupPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailCtrl = TextEditingController();
   final _passwordCtrl = TextEditingController();
-  final _storeNameCtrl = TextEditingController();
+  final _nicknameCtrl = TextEditingController();
   final _addressCtrl = TextEditingController();
   bool _loading = false;
 
@@ -25,9 +25,9 @@ class _StoreSignupPageState extends State<StoreSignupPage> {
     final auth = AuthService();
     try {
       await auth.signupStore(
-        _storeNameCtrl.text.trim(),
         _emailCtrl.text.trim(),
         _passwordCtrl.text.trim(),
+        _nicknameCtrl.text.trim(),
         _addressCtrl.text.trim(),
       );
       if (!mounted) return;
@@ -45,7 +45,7 @@ class _StoreSignupPageState extends State<StoreSignupPage> {
   void dispose() {
     _emailCtrl.dispose();
     _passwordCtrl.dispose();
-    _storeNameCtrl.dispose();
+    _nicknameCtrl.dispose();
     _addressCtrl.dispose();
     super.dispose();
   }
@@ -68,12 +68,6 @@ class _StoreSignupPageState extends State<StoreSignupPage> {
                   key: _formKey,
                   child: Column(mainAxisSize: MainAxisSize.min, children: [
                     const Text('Sign Up (Store)', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 16),
-                    TextFormField(
-                      controller: _storeNameCtrl,
-                      decoration: const InputDecoration(labelText: 'Store Name', prefixIcon: Icon(Icons.store)),
-                      validator: (v) => (v == null || v.trim().isEmpty) ? 'Enter store name' : null,
-                    ),
                     const SizedBox(height: 12),
                     TextFormField(
                       controller: _emailCtrl,
@@ -86,6 +80,12 @@ class _StoreSignupPageState extends State<StoreSignupPage> {
                       decoration: const InputDecoration(labelText: 'Password', prefixIcon: Icon(Icons.lock)),
                       obscureText: true,
                       validator: (v) => (v == null || v.trim().length < 6) ? 'Min 6 chars' : null,
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: _nicknameCtrl,
+                      decoration: const InputDecoration(labelText: 'Store Name', prefixIcon: Icon(Icons.store)),
+                      validator: (v) => (v == null || v.trim().isEmpty) ? 'Enter store name' : null,
                     ),
                     const SizedBox(height: 12),
                     TextFormField(

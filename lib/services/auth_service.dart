@@ -45,15 +45,16 @@ class AuthService {
     return headers;
   }
 
-  Future<void> signupPlayer(String username, String email, String password) async {
+  // Cambiado: ahora usa "nickname" en el JSON (antes enviaba "username")
+  Future<void> signupPlayer(String email, String password,String nickname) async {
     final url = Uri.parse('$baseUrl/signup/player');
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
-        'username': username,
         'email': email,
         'password': password,
+        'nickname': nickname,
       }),
     );
 
@@ -62,15 +63,15 @@ class AuthService {
     }
   }
 
-  Future<void> signupStore(String storeName, String email, String password, String address) async {
+  Future<void> signupStore(String email, String password, String nickname, String address) async {
     final url = Uri.parse('$baseUrl/signup/store');
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
-        'storeName': storeName,
         'email': email,
         'password': password,
+        'nickname': nickname,
         'address': address,
       }),
     );

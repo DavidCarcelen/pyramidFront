@@ -23,7 +23,7 @@ class _PlayerSignupPageState extends State<PlayerSignupPage> {
 
     final auth = AuthService();
     try {
-      await auth.signupPlayer(_nicknameCtrl.text.trim(), _emailCtrl.text.trim(), _passwordCtrl.text.trim());
+      await auth.signupPlayer(_emailCtrl.text.trim(), _passwordCtrl.text.trim(), _nicknameCtrl.text.trim());
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Player account created')));
       Navigator.pop(context);
