@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import '../theme/app_colors.dart';
-//import 'signup_choice_page.dart';
 import '../services/auth_service.dart';
+import '../theme/app_colors.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -13,8 +12,6 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-
-  // Agregado: estado de carga para deshabilitar botones y mostrar indicador
   bool _loading = false;
 
   Future<void> _login() async {
@@ -27,15 +24,19 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     setState(() => _loading = true);
-    final auth = AuthService(); // <-- instanciar AuthService
+    final auth = AuthService();
     try {
-      await auth.login(email, password); // <-- llamada de instancia
-      // opcional: leer token si lo necesitas
-      final token = await auth.getSavedToken();
-      // navegar o actualizar UI según el resultado
+      await auth.login(email, password); // guarda token internamente
+
+      final entity = (await auth.getEntityFromToken())?.toUpperCase();
+
+      // redirección según entidad
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Login successful')));
-      Navigator.pushReplacementNamed(context, '/pyramid/feed/upcoming-tournaments'); // <- ajusta la ruta destino según tu app
+      if (entity == 'STORE') {
+        Navigator.pushReplacementNamed(context, '/pyramid/store/tournaments/home');
+      } else {
+        Navigator.pushReplacementNamed(context, '/pyramid/feed/upcoming-tournaments');
+      }
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Login failed: $e')));

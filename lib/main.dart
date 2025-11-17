@@ -4,6 +4,9 @@ import 'theme/app_colors.dart';
 import 'screens/signup_choice_page.dart';
 import 'screens/player_signup_page.dart';
 import 'screens/store_signup_page.dart';
+import 'screens/store_home_page.dart';
+import 'screens/player_home_page.dart';
+
 
 
 void main() {
@@ -27,6 +30,8 @@ class PyramidApp extends StatelessWidget {
         '/pyramid/auth/signup': (context) => const SignupChoicePage(),
         '/pyramid/auth/signup/player': (context) => const PlayerSignupPage(),
         '/pyramid/auth/signup/store': (context) => const StoreSignupPage(),
+        '/pyramid/store/tournaments/home': (context) => const StoreHomePage(),
+        '/pyramid/feed/upcoming-tournaments': (context) => const PlayerHomePage(),
       },
     );
   }
