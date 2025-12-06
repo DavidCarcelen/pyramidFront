@@ -15,7 +15,11 @@ class _StoreSignupPageState extends State<StoreSignupPage> {
   final _emailCtrl = TextEditingController();
   final _passwordCtrl = TextEditingController();
   final _nicknameCtrl = TextEditingController();
-  final _addressCtrl = TextEditingController();
+  final _countryCtrl = TextEditingController();
+  final _cityCtrl = TextEditingController();
+  final _googleMapsLinkCtrl = TextEditingController();
+  final _storeCapacityCtrl = TextEditingController();
+  final _cardMarketLinkCtrl = TextEditingController();
   bool _loading = false;
 
   Future<void> _submit() async {
@@ -23,22 +27,39 @@ class _StoreSignupPageState extends State<StoreSignupPage> {
     setState(() => _loading = true);
 
     final auth = AuthService();
-    try {
-      await auth.signupStore(
-        _emailCtrl.text.trim(),
-        _passwordCtrl.text.trim(),
-        _nicknameCtrl.text.trim(),
-        _addressCtrl.text.trim(),
-      );
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Store account created')));
-      Navigator.pop(context);
-    } catch (e) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Sign-up failed: $e')));
-    } finally {
-      if (mounted) setState(() => _loading = false);
-    }
+try {
+  final capacityText = _storeCapacityCtrl.text.trim();
+  final int? capacity = int.tryParse(capacityText);
+
+  if (capacity == null) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Store capacity must be a valid number')),
+    );
+    setState(() => _loading = false);
+    return;
+  }
+
+  await auth.signupStore(
+    _emailCtrl.text.trim(),
+    _passwordCtrl.text.trim(),
+    _nicknameCtrl.text.trim(),
+    _countryCtrl.text.trim(),
+    _cityCtrl.text.trim(),
+    _googleMapsLinkCtrl.text.trim(),
+    capacity, // ahora es int
+    _cardMarketLinkCtrl.text.trim(),
+  );
+
+  if (!mounted) return;
+  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Store account created')));
+  Navigator.pop(context);
+} catch (e) {
+  if (!mounted) return;
+  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Sign-up failed: $e')));
+} finally {
+  if (mounted) setState(() => _loading = false);
+}
   }
 
   @override
@@ -46,7 +67,11 @@ class _StoreSignupPageState extends State<StoreSignupPage> {
     _emailCtrl.dispose();
     _passwordCtrl.dispose();
     _nicknameCtrl.dispose();
-    _addressCtrl.dispose();
+    _countryCtrl.dispose();
+    _cityCtrl.dispose();
+    _googleMapsLinkCtrl.dispose();
+    _storeCapacityCtrl.dispose();
+    _cardMarketLinkCtrl.dispose();
     super.dispose();
   }
 
@@ -89,9 +114,34 @@ class _StoreSignupPageState extends State<StoreSignupPage> {
                     ),
                     const SizedBox(height: 12),
                     TextFormField(
-                      controller: _addressCtrl,
-                      decoration: const InputDecoration(labelText: 'Address', prefixIcon: Icon(Icons.location_on)),
-                      validator: (v) => (v == null || v.trim().isEmpty) ? 'Enter address' : null,
+                      controller: _countryCtrl,
+                      decoration: const InputDecoration(labelText: 'Country', prefixIcon: Icon(Icons.flag)),
+                      validator: (v) => (v == null || v.trim().isEmpty) ? 'Enter country' : null,
+                    ),
+                    const SizedBox(height: 12),
+                    TextFormField(
+                      controller: _cityCtrl,
+                      decoration: const InputDecoration(labelText: 'City', prefixIcon: Icon(Icons.location_city)),
+                      validator: (v) => (v == null || v.trim().isEmpty) ? 'Enter city' : null,
+                    ),
+                    const SizedBox(height: 12),
+                    TextFormField(
+                      controller: _googleMapsLinkCtrl,
+                      decoration: const InputDecoration(labelText: 'Google Maps Link', prefixIcon: Icon(Icons.map)),
+                      validator: (v) => (v == null || v.trim().isEmpty) ? 'Enter Google Maps link' : null,
+                    ),
+                    const SizedBox(height: 12),
+                    TextFormField(
+                      controller: _storeCapacityCtrl,
+                      decoration: const InputDecoration(labelText: 'Store Capacity', prefixIcon: Icon(Icons.people)),
+                      keyboardType: TextInputType.number,
+                      validator: (v) => (v == null || v.trim().isEmpty || int.tryParse(v.trim()) == null) ? 'Enter valid capacity' : null,
+                    ),
+                    const SizedBox(height: 12),
+                    TextFormField(
+                      controller: _cardMarketLinkCtrl,
+                      decoration: const InputDecoration(labelText: 'CardMarket Link', prefixIcon: Icon(Icons.link)),
+                      validator: (v) => (v == null || v.trim().isEmpty) ? 'Enter CardMarket link' : null,
                     ),
                     const SizedBox(height: 20),
                     SizedBox(
